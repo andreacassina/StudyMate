@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using StudyMate.Models;
 using StudyMate.Services;
 
@@ -33,18 +34,36 @@ namespace StudyMate.Controllers
         // GET: EventsController/Create
         public ActionResult Create()
         {
+            List<SelectListItem> courses = new List<SelectListItem>()
+            {
+                // Creo dei corsi in modo temporaneo
+                new SelectListItem()
+                {
+                    Text = "PAC",
+                    Value = "1"
+                }
+            };
 
+            //ViewBag.userId = new SelectListItem()
+            //{
+            //    Text = "PippoPuppo",
+            //    Value = "1"
+            //};
+           
+            ViewBag.CourseId = courses;
             return View();
         }
 
         // POST: EventsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        //public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Event ev)
         {
             try
             {
-                
+                ev.UserId = "aa11";
+                _taskService.AddTask(ev);
                 return RedirectToAction(nameof(Index));
             }
             catch
