@@ -22,6 +22,8 @@ namespace StudyMate
 
             var app = builder.Build();
 
+            var x = 1;
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
