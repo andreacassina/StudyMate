@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StudyMate.Data;
+using StudyMate.Models;
+using StudyMate.Services;
 
 namespace StudyMate
 {
@@ -14,6 +16,12 @@ namespace StudyMate
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            builder.Services.AddDbContext<PACContext>(options =>
+                options.UseSqlServer(connectionString));
+
+            builder.Services.AddScoped<ITaskService, TaskService>();
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -49,5 +57,7 @@ namespace StudyMate
 
             app.Run();
         }
+
+
     }
 }
