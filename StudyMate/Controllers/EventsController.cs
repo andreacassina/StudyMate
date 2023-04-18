@@ -19,7 +19,7 @@ namespace StudyMate.Controllers
         // GET: EventsController
         public ActionResult Index()
         {
-            List<Event> events = (List<Event>)_taskService.GetAllTasks();
+            List<EventViewModel> events = (List<EventViewModel>)_taskService.GetAllTasks();
             return View(events);
         }
 
@@ -113,5 +113,20 @@ namespace StudyMate.Controllers
                 return View();
             }
         }
+
+        //Elenco di tutti gli eventiPersonali
+        public ActionResult PersonalEvents()
+        {
+            List<EventViewModel> events = (List<EventViewModel>)_taskService.GetAllPersonalEvents();
+            return View(events);
+        }
+
+        //Elenco di tutte le lezioni del percorso di studi
+        public ActionResult LessonEvents()
+        {
+            List<EventViewModel> events = (List<EventViewModel>)_taskService.GetAllLessons();
+            return View("Lessons",events);
+        }
+
     }
 }

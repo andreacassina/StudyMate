@@ -13,6 +13,7 @@ namespace StudyMate.Models
         public string UserId { get; set; } = null!;
         public string UserName { get; set; } = null!;
         public string? Email { get; set; }
+        public string DegreeCourse { get; set; }  // piano di studi
 
         public virtual ICollection<Event> Events { get; set; }
     }
