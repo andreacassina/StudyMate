@@ -20,6 +20,7 @@ namespace StudyMate.Models
         public virtual DbSet<Deadline> Deadlines { get; set; } = null!;
         public virtual DbSet<Event> Events { get; set; } = null!;
         public virtual DbSet<User> Users { get; set; } = null!;
+        public virtual DbSet<Lesson> Lessons { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -80,7 +81,7 @@ namespace StudyMate.Models
                     .ValueGeneratedNever()
                     .HasColumnName("ID");
 
-                entity.Property(e => e.CourseId).HasColumnName("CourseID");
+                //entity.Property(e => e.CourseId).HasColumnName("CourseID");
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(100)
@@ -95,11 +96,11 @@ namespace StudyMate.Models
                     .IsUnicode(false)
                     .HasColumnName("UserID");
 
-                entity.HasOne(d => d.Course)
-                    .WithMany(p => p.Events)
-                    .HasForeignKey(d => d.CourseId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Events_Courses");
+                //entity.HasOne(d => d.Course)
+                //    .WithMany(p => p.Events)
+                //    .HasForeignKey(d => d.CourseId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_Events_Courses");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Events)
