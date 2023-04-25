@@ -108,21 +108,21 @@ namespace StudyMate.Models
                     .HasConstraintName("FK_Events_Users");
             });
 
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.Property(e => e.UserId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("UserID");
+            //modelBuilder.Entity<User>(entity =>
+            //{
+            //    entity.Property(e => e.UserId)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false)
+            //        .HasColumnName("UserID");
 
-                entity.Property(e => e.Email)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+            //    entity.Property(e => e.Email)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false);
 
-                entity.Property(e => e.UserName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
+            //    entity.Property(e => e.UserName)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false);
+            //});
 
             OnModelCreatingPartial(modelBuilder);
         }
