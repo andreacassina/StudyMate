@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using StudyMate.Models;
+using StudyMate.Services;
 
 namespace StudyMate.Areas.Identity.Pages.Account
 {
@@ -31,12 +32,15 @@ namespace StudyMate.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
+        private readonly IDegreeCourseService _degreeService;
+
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IDegreeCourseService degreeCourseService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +48,7 @@ namespace StudyMate.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _degreeService = degreeCourseService;
         }
 
         /// <summary>
@@ -121,6 +126,18 @@ namespace StudyMate.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 user.DegreeCourse = Input.DegreeCourse;
+
+                //Controllo se i corsi dell'indirizzo di laurea sono già presenti nel database
+                if (_degreeService.searchDegreeCourseCourses(Input.DegreeCourse))
+                {
+                    Console.WriteLine("Esiste");
+                }   
+                else
+                {
+                    Console.WriteLine("Non Esiste");
+                    _degreeService.DownloadCourses(Input.DegreeCourse);
+                }
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)

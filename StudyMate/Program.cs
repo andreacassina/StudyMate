@@ -21,7 +21,10 @@ namespace StudyMate
             builder.Services.AddDbContext<PACContext>(options =>
                 options.UseSqlServer(connectionString));
 
+            builder.Services.AddHttpClient<DegreeCourseService>();
+
             builder.Services.AddScoped<ITaskService, TaskService>();
+            builder.Services.AddScoped<IDegreeCourseService, DegreeCourseService>();
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
