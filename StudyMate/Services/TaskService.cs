@@ -75,5 +75,26 @@ namespace StudyMate.Services
             Event ev = _context.Events.Where(e => e.Id.Equals(id)).FirstOrDefault();
             return ev;
         }
+
+        public int GetFreeHours(DateTime date)
+        {
+            int freeHours = 24;
+                                 //00 01  02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+            int[] day = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1 };
+            //Cerco le lezioni nella giornata selezionata
+            var lessons = _context.Lessons.Where(l => l.Start.Date.Equals(date.Date)).Select(l => new {
+                start = l.Start.Hour,
+                end = l.End.Hour
+            });
+
+            foreach(var lesson in lessons)
+            {
+                for (int i = lesson.start; i <= lesson.end; i++)
+                    day[i] = 0;
+            }
+
+            freeHours = day.Sum();
+            return freeHours;
+        }
     }
 }
