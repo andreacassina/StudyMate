@@ -19,7 +19,7 @@ namespace StudyMate.Models
         public virtual DbSet<Course> Courses { get; set; } = null!;
         public virtual DbSet<Deadline> Deadlines { get; set; } = null!;
         public virtual DbSet<Event> Events { get; set; } = null!;
-        public virtual DbSet<User> Users { get; set; } = null!;
+        //public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Lesson> Lessons { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,80 +33,86 @@ namespace StudyMate.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Course>(entity =>
-            {
-                entity.Property(e => e.CourseId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("CourseID");
+            //modelBuilder.Entity<Course>(entity =>
+            //{
+            //    entity.Property(e => e.CourseId)
+            //        .ValueGeneratedNever()
+            //        .HasColumnName("CourseID");
 
-                entity.Property(e => e.Cfu).HasColumnName("CFU");
+            //    entity.Property(e => e.Cfu).HasColumnName("CFU");
 
-                entity.Property(e => e.CourseName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+            //    entity.Property(e => e.CourseName)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false);
 
-                entity.Property(e => e.DegreeCourse)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+            //    entity.Property(e => e.DegreeCourse)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false);
 
-                entity.Property(e => e.FirstLessonDate).HasColumnType("datetime");
+            //    entity.Property(e => e.FirstLessonDate).HasColumnType("datetime");
 
-                entity.Property(e => e.LastLessonDate).HasColumnType("datetime");
+            //    entity.Property(e => e.LastLessonDate).HasColumnType("datetime");
 
-                entity.Property(e => e.ProfessorName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-            });
+            //    entity.Property(e => e.ProfessorName)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false);
 
-            modelBuilder.Entity<Deadline>(entity =>
-            {
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
+            //    entity.HasKey(e => e.CourseId);
+            //});
 
-                entity.Property(e => e.CourseId).HasColumnName("CourseID");
+            //modelBuilder.Entity<Deadline>(entity =>
+            //{
+            //    entity.Property(e => e.Id)
+            //        .ValueGeneratedNever()
+            //        .HasColumnName("ID");
 
-                entity.Property(e => e.ExamDate).HasColumnType("datetime");
+            //    entity.Property(e => e.CourseId).HasColumnName("CourseID");
 
-                entity.HasOne(d => d.Course)
-                    .WithMany(p => p.Deadlines)
-                    .HasForeignKey(d => d.CourseId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Deadlines_Courses1");
-            });
+            //    entity.Property(e => e.ExamDate).HasColumnType("datetime");
 
-            modelBuilder.Entity<Event>(entity =>
-            {
-                entity.Property(e => e.Id)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ID");
+            //    entity.HasOne(d => d.Course)
+            //        .WithMany(p => p.Deadlines)
+            //        .HasForeignKey(d => d.CourseId)
+            //        .OnDelete(DeleteBehavior.ClientSetNull)
+            //        .HasConstraintName("FK_Deadlines_Courses1");
 
-                //entity.Property(e => e.CourseId).HasColumnName("CourseID");
+            //    entity.HasKey(e => e.Id);
+            //});
 
-                entity.Property(e => e.Description)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+            //modelBuilder.Entity<Event>(entity =>
+            //{
+            //    entity.Property(e => e.Id)
+            //        .ValueGeneratedNever()
+            //        .HasColumnName("ID");
 
-                entity.Property(e => e.EndDate).HasColumnType("datetime");
+            //    //entity.Property(e => e.CourseId).HasColumnName("CourseID");
 
-                entity.Property(e => e.StartDate).HasColumnType("datetime");
+            //    entity.Property(e => e.Description)
+            //        .HasMaxLength(100)
+            //        .IsUnicode(false);
 
-                entity.Property(e => e.UserId)
-                    .HasMaxLength(50)
-                    .IsUnicode(false)
-                    .HasColumnName("UserID");
+            //    entity.Property(e => e.EndDate).HasColumnType("datetime");
 
-                //entity.HasOne(d => d.Course)
-                //    .WithMany(p => p.Events)
-                //    .HasForeignKey(d => d.CourseId)
-                //    .OnDelete(DeleteBehavior.ClientSetNull)
-                //    .HasConstraintName("FK_Events_Courses");
+            //    entity.Property(e => e.StartDate).HasColumnType("datetime");
 
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Events)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Events_Users");
-            });
+            //    entity.Property(e => e.UserId)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false)
+            //        .HasColumnName("UserID");
+
+            //    entity.HasKey(e => e.Id);
+
+            //    //entity.HasOne(d => d.Course)
+            //    //    .WithMany(p => p.Events)
+            //    //    .HasForeignKey(d => d.CourseId)
+            //    //    .OnDelete(DeleteBehavior.ClientSetNull)
+            //    //    .HasConstraintName("FK_Events_Courses");
+
+            //    //entity.HasOne(d => d.User)
+            //    //    .WithMany(p => p.Events)
+            //    //    .HasForeignKey(d => d.UserId)
+            //    //    .HasConstraintName("FK_Events_Users");
+            //});
 
             //modelBuilder.Entity<User>(entity =>
             //{
@@ -124,7 +130,7 @@ namespace StudyMate.Models
             //        .IsUnicode(false);
             //});
 
-            OnModelCreatingPartial(modelBuilder);
+            //OnModelCreatingPartial(modelBuilder);
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

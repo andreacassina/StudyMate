@@ -28,23 +28,58 @@ namespace StudyMate.Services
         //Ottengo l'elenco di tutti i corsi dato il corso di laurea -> l'elenco dei corsi viene preso dall'API CourseLesson
         public async void DownloadCourses(string degreeCourse)
         {
-            var apiUrl = $"https://localhost:7141/GetCourses?degreeCourse=" + degreeCourse;
+            //Controllo se il corso di laurea è già presente nel database
+            if (!_context.Courses.Select(c => c.DegreeCourse).Contains(degreeCourse))
+            {
 
-            var response = _httpClient.GetAsync(apiUrl).Result;
 
-            response.EnsureSuccessStatusCode();
+                var apiUrl = $"https://localhost:7141/GetCourses?degreeCourse=" + degreeCourse;
 
-            //IEnumerable<Course> courses = await response.Content.ReadAsStringAsync();
-            var responseString = await response.Content.ReadAsStringAsync();
-            var courses = JsonConvert.DeserializeObject<Course[]>(responseString);
+                var response = _httpClient.GetAsync(apiUrl).Result;
 
-            //PARTE DI INERIMENTO NEL DB E RICERCA DELLE LEZIONI
+                response.EnsureSuccessStatusCode();
+
+                //IEnumerable<Course> courses = await response.Content.ReadAsStringAsync();
+                var responseString = await response.Content.ReadAsStringAsync();
+                var courses = JsonConvert.DeserializeObject<Course[]>(responseString);
+
+                //PARTE DI INERIMENTO NEL DB E RICERCA DELLE LEZIONI
+                foreach (var course in courses)
+                {
+                    // Inserisco il corso nella tabella courses
+                    _context.Courses.Add(course);
+                    _context.SaveChanges();
+                    //Ottengo le lezioni
+                    DownloadLessonsByCourse(degreeCourse, course.CourseName, course.CourseId);
+                    //_context.SaveChanges();
+
+                }
+            }
+            
+
         }
 
         // Ottengo l'elenco delle lezioni dato il nome del corso -> salvo nel db
-        private void DownloadLessonsByCourse(string courseName)
+        private async void DownloadLessonsByCourse(string degreeCourse, string courseName, int courseID)
         {
+            var apiUrl = $"https://localhost:7141/GetLessons?degreeCourse=" + degreeCourse + "&courseName=" + courseName;
+            var response = _httpClient.GetAsync(apiUrl).Result;
+            response.EnsureSuccessStatusCode();
 
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            var lessons = JsonConvert.DeserializeObject<Lesson[]>(responseString);
+
+            foreach(var lesson in lessons)
+            {
+                lesson.CourseId = courseID;
+                lesson.Description = courseName;
+                _context.Lessons.Add(lesson);
+
+            }
+            _context.SaveChanges();
         }
+
+
     }
 }

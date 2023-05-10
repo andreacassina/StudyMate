@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace StudyMate.Models
 {
@@ -10,7 +11,7 @@ namespace StudyMate.Models
             Deadlines = new HashSet<Deadline>();
             Events = new HashSet<Event>();
         }
-
+        [Key]
         public int CourseId { get; set; }
         public string CourseName { get; set; } = null!;
         public string ProfessorName { get; set; } = null!;
