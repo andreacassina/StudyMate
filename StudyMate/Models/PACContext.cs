@@ -21,6 +21,7 @@ namespace StudyMate.Models
         public virtual DbSet<Event> Events { get; set; } = null!;
         //public virtual DbSet<User> Users { get; set; } = null!;
         public virtual DbSet<Lesson> Lessons { get; set; } = null!;
+        public virtual DbSet<StudySlot> StudySlots { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
