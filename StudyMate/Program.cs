@@ -25,6 +25,7 @@ namespace StudyMate
 
             builder.Services.AddScoped<ITaskService, TaskService>();
             builder.Services.AddScoped<IDegreeCourseService, DegreeCourseService>();
+            builder.Services.AddScoped<IGreedyService, GreedyService>();
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
