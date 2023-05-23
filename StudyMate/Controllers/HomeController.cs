@@ -2,6 +2,8 @@
 using StudyMate.Models;
 using StudyMate.Services;
 using System.Diagnostics;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace StudyMate.Controllers
 {
@@ -9,18 +11,63 @@ namespace StudyMate.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ITaskService _taskService;
+        private readonly IGreedyService _greedyService;
+        private readonly UserManager<ApplicationUser> _userManager;    
 
-        public HomeController(ILogger<HomeController> logger, ITaskService taskService)
+        public HomeController(ILogger<HomeController> logger, ITaskService taskService, IGreedyService greedyService, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _taskService = taskService;
+            _greedyService = greedyService;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
         {
+            return View();
+        }
+
+        public async Task<IActionResult> CalculateStudyTime()
+        {
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+            
             DateTime date = new DateTime(2022, 10, 05);
-            int a = _taskService.GetFreeHours(date);
-            Console.WriteLine(a);
+           
+            if(user != null)
+            {
+                string userName = user.UserName;
+                string userId = user.Id;
+                string degreeCourse = user.DegreeCourse;
+                int[] weekHours = new int[168]; // totale ore in 7 giorni
+                int index = 0;
+                for(int i = 0; i < 7; i++)
+                {
+                    DateTime dt = date.AddDays(i);
+                    int[] dailyHours = _taskService.GetFreeHours(dt);
+
+                    for (int j = 0; j < dailyHours.Length; j++)
+                    {
+                        weekHours[index] = dailyHours[j];
+                        index++;
+                    }
+
+                }
+                //_taskService.GetFreeHours(date);
+                
+
+
+                if (_greedyService.CalculateGreedy(weekHours, user.Id, user.UserName, user.DegreeCourse, date))
+                    Console.WriteLine("OK");
+                else
+                    Console.WriteLine("ERRORE");
+
+            }
+            //var claims = User.Claims.Where(c => c.Type.Equals("UserName")).FirstOrDefault();
+            
+
+            //if(_greedyService.CalculateGreedy(dailyHours, User.Identity.Name,))
+
+            
             return View();
         }
 

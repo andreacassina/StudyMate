@@ -56,7 +56,7 @@ namespace StudyMate.Services
                 Cfu = Math.Ceiling((((c.Cfu * 25) - 100) * 1.1) / 12)       // ore da studiare nella settimana
             });
 
-            // Sottrazione ore già studiate
+            // Sottrazione ore già studiate --> Da aggiungere
 
             List<StudySlot> studySlots = new List<StudySlot>();
 
@@ -98,7 +98,7 @@ namespace StudyMate.Services
 
             }
             Shuffle(studySlots);
-            studySlots.OrderBy(s => s.Hours);
+            studySlots.OrderByDescending(s => s.Hours);
 
             return studySlots;
         }
@@ -160,13 +160,13 @@ namespace StudyMate.Services
                 {
                     freeHours[kvp.Key] = kvp.Value - sl.Hours;      // Aggiorno le ore disponibili nel dizionario
                     // Compilazione valori orari il sl --> parto dal fondo
-                    sl.From = startingDate;
-                    TimeSpan ts = new TimeSpan(kvp.Key + kvp.Value - sl.Hours, 0, 0);
+                    sl.From = startingDate.AddDays(kvp.Key % 24);
+                    TimeSpan ts = new TimeSpan(kvp.Key%24 + kvp.Value - sl.Hours, 0, 0);
                     sl.From = sl.From.Date + ts;
                     //sl.From.AddHours(kvp.Key + kvp.Value - sl.Hours);
 
-                    sl.To = startingDate;
-                    ts = new TimeSpan(kvp.Key + kvp.Value, 0, 0);
+                    sl.To = startingDate.AddDays(kvp.Key % 24);
+                    ts = new TimeSpan(kvp.Key % 24 + kvp.Value, 0, 0);
                     sl.To = sl.To.Date + ts;
                     //sl.To.AddHours(kvp.Key + kvp.Value);
 
