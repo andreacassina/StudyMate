@@ -47,28 +47,36 @@ namespace StudyMate.Services
 
         private List<StudySlot> SearchCandidates(string degreeCourse, string userName, string userId)
         {
-            var courses = _context.Courses.Where(c => c.DegreeCourse.Equals(degreeCourse)).Select(c => new
+            var courses = _context.Courses.Where(c => c.DegreeCourse.Equals(degreeCourse)).Select(c => new Course
             {
                 ProfessorName = c.ProfessorName,
                 CourseName = c.CourseName,
                 DegreeCourse = c.DegreeCourse,
                 CourseId = c.CourseId,
-                Cfu = Math.Ceiling((((c.Cfu * 25) - 100) * 1.1) / 12)       // ore da studiare nella settimana
+                //Cfu = Math.Ceiling((((c.Cfu * 25) - 100) * 1.1) / 12)       // ore da studiare nella settimana
+                Cfu = (int)Math.Ceiling((((c.Cfu * 25) - 100) * 1.1))       // ore da studiare nella settimana
             });
 
             // Sottrazione ore già studiate --> Da aggiungere
+            
 
             List<StudySlot> studySlots = new List<StudySlot>();
 
             foreach (var course in courses)
             {
-                double threeHoursSlots = Math.Floor(course.Cfu / 3);      // ore di slot da 3
+                // cerco le ore già studiate
+                var alreadyStudyHours = _context.StudySlots.Where(s => s.UserId.Equals(userId) && s.CourseId.Equals(course.CourseId)).Sum(s => s.Hours);
+                double calc = ((course.Cfu - alreadyStudyHours) / 12);
+                course.Cfu = (int)Math.Ceiling((double)calc);
+
+                double priority = 0;
+                double threeHoursSlots = Math.Floor((double)(course.Cfu / 3));      // ore di slot da 3
                 double oneHourSlots = course.Cfu - 3 * threeHoursSlots;                // slot da 1
 
                 DateTime deadline = _context.Deadlines.Where(d => d.CourseId.Equals(course.CourseId)).Select(d => d.ExamDate).FirstOrDefault();     // deadline del corso
                 double remainingDays = Math.Floor((deadline - DateTime.Today).TotalDays);   // Giorni rimanenti rispetto alla data di oggi
 
-                double priority = (1 / remainingDays) + (((course.Cfu * 25) - 100) * 1.1) ;        // Priorità
+                priority = (1 / remainingDays) + (((course.Cfu * 25) - 100) * 1.1) ;        // Priorità
 
                 for(int i = 0; i < threeHoursSlots; i++)
                 {
@@ -159,14 +167,32 @@ namespace StudyMate.Services
                 if(kvp.Value >= sl.Hours)
                 {
                     freeHours[kvp.Key] = kvp.Value - sl.Hours;      // Aggiorno le ore disponibili nel dizionario
+                    //Controllo i giorni da aggiungere alla data in cui sui è eseguito il calcolo
+                    int hr = 0;
+                    int day = 0;
+                    if (kvp.Key < 24)
+                    {
+                        hr = kvp.Key;
+                        day = 0;
+                    }
+                    else
+                    {
+                        double number = kvp.Key / 24;
+                        day = (int)Math.Floor(number);
+                        hr = kvp.Key % 24;
+                    }
                     // Compilazione valori orari il sl --> parto dal fondo
-                    sl.From = startingDate.AddDays(kvp.Key % 24);
-                    TimeSpan ts = new TimeSpan(kvp.Key%24 + kvp.Value - sl.Hours, 0, 0);
+                    //sl.From = startingDate.AddDays(kvp.Key % 24);
+                    sl.From = startingDate.AddDays(day);
+                    //TimeSpan ts = new TimeSpan(kvp.Key%24 + kvp.Value - sl.Hours, 0, 0);
+                    TimeSpan ts = new TimeSpan(hr + kvp.Value - sl.Hours, 0, 0);
                     sl.From = sl.From.Date + ts;
                     //sl.From.AddHours(kvp.Key + kvp.Value - sl.Hours);
 
-                    sl.To = startingDate.AddDays(kvp.Key % 24);
-                    ts = new TimeSpan(kvp.Key % 24 + kvp.Value, 0, 0);
+                    //sl.To = startingDate.AddDays(kvp.Key % 24);
+                    sl.To = startingDate.AddDays(day);
+                    //ts = new TimeSpan(kvp.Key % 24 + kvp.Value, 0, 0);
+                    ts = new TimeSpan(hr + kvp.Value, 0, 0);
                     sl.To = sl.To.Date + ts;
                     //sl.To.AddHours(kvp.Key + kvp.Value);
 
@@ -181,6 +207,17 @@ namespace StudyMate.Services
             
         }
 
+        public System.Threading.Tasks.Task deleteStudySlot(DateTime date, string userId)
+        {
+            var studySlots = _context.StudySlots.Where(s => s.From.Date >= date.Date && s.UserId.Equals(userId));
 
+            foreach(var sl in studySlots)
+            {
+                _context.StudySlots.Remove(sl);
+            }
+
+            _context.SaveChanges();
+            return System.Threading.Tasks.Task.CompletedTask;
+        }
     }
 }

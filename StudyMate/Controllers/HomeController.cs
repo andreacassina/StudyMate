@@ -30,15 +30,21 @@ namespace StudyMate.Controllers
         public async Task<IActionResult> CalculateStudyTime()
         {
             ApplicationUser user = await _userManager.GetUserAsync(User);
-            
-            DateTime date = new DateTime(2022, 10, 05);
-           
-            if(user != null)
+
+
+            //DateTime date = new DateTime(2022, 10, 05);
+            DateTime date = new DateTime(2022, 10, 06);
+
+            if (user != null)
             {
                 string userName = user.UserName;
                 string userId = user.Id;
                 string degreeCourse = user.DegreeCourse;
                 int[] weekHours = new int[168]; // totale ore in 7 giorni
+
+                // Elimino gli study slots già inseriti per l'utente
+                await _greedyService.deleteStudySlot(date, user.Id);
+
                 int index = 0;
                 for(int i = 0; i < 7; i++)
                 {
