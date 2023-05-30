@@ -1,65 +1,25 @@
-﻿@model IEnumerable<StudyMate.Models.EventViewModel>
-
-@{
-    ViewData["Title"] = "View";
+﻿@{
+    ViewData["Title"] = "Calendario";
 }
 
-<h1>Index</h1>
+<div id="calendar">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-@*            <th>
-                @Html.DisplayNameFor(model => model.Course)
-            </th>*@
-@*            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>*@
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Priority)
-            </td>
-@*            <td>
-                @Html.DisplayFor(modelItem => item.Course.CourseId)
-            </td>*@
-@*            <td>
-                @Html.DisplayFor(modelItem => item.User.UserId)
-            </td>*@
-            <td>
-@*                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
-            </td>
-        </tr>
+</div>
+
+@section Scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialDate: '2022-10-02',
+                initialView: 'timeGridWeek',
+              
+                events: '/api/calendar/events' // URL dell'API per recuperare gli eventi
+            });
+            calendar.render();
+        });
+    </script>
 }
-    </tbody>
-</table>

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using StudyMate.Models;
@@ -10,17 +11,18 @@ namespace StudyMate.Controllers
     {
         private readonly ITaskService _taskService;
         private PACContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public EventsController(ITaskService taskService, PACContext pACContext)
+        public EventsController(ITaskService taskService, PACContext pACContext, UserManager<ApplicationUser> userManager)
         {
             _taskService = taskService;
             _context = pACContext;
+            _userManager = userManager; 
         }
         // GET: EventsController
         public ActionResult Index()
         {
-            List<EventViewModel> events = (List<EventViewModel>)_taskService.GetAllTasks();
-            return View(events);
+            return View();
         }
 
         // GET: EventsController/Details/5
@@ -58,11 +60,12 @@ namespace StudyMate.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //public ActionResult Create(IFormCollection collection)
-        public ActionResult Create(Event ev)
+        public async Task<IActionResult> Create(Event ev)
         {
             try
             {
-                ev.UserId = "aa11";
+                ApplicationUser user = await _userManager.GetUserAsync(User);
+                ev.UserId = user.Id;
                 _taskService.AddTask(ev);
                 return RedirectToAction(nameof(Index));
             }
@@ -115,16 +118,18 @@ namespace StudyMate.Controllers
         }
 
         //Elenco di tutti gli eventiPersonali
-        public ActionResult PersonalEvents()
+        public async Task<IActionResult> PersonalEvents()
         {
-            List<EventViewModel> events = (List<EventViewModel>)_taskService.GetAllPersonalEvents();
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+            List<EventViewModel> events = (List<EventViewModel>)_taskService.GetAllPersonalEvents(user.Id);
             return View(events);
         }
 
         //Elenco di tutte le lezioni del percorso di studi
-        public ActionResult LessonEvents()
+        public async Task<IActionResult> LessonEvents()
         {
-            List<EventViewModel> events = (List<EventViewModel>)_taskService.GetAllLessons();
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+            List<EventViewModel> events = (List<EventViewModel>)_taskService.GetAllLessons(user.DegreeCourse);
             return View("Lessons",events);
         }
 
