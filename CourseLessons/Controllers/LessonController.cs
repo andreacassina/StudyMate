@@ -9,15 +9,25 @@ namespace CourseLessons.Controllers
 
         [HttpGet("GetLessons")]
         //[HttpGet]
-        public IEnumerable<Lesson> Get(string degreeCourse, string courseName)
+        public ActionResult<IEnumerable<Lesson>> Get(string degreeCourse, string courseName)
         {
-            //D:\Projects\StudyMate1\CourseLessons\Courses\
-            string filePath = @"Courses\" + degreeCourse + @"\" + courseName + ".csv";
-            using (var reader = new StreamReader(filePath))
-            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            try
+            {   
+                string filePath = @"Courses\" + degreeCourse + @"\" + courseName + ".csv";
+                using (var reader = new StreamReader(filePath))
+                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                {
+                    var records = csv.GetRecords<Lesson>().ToList();
+                    return records;
+                }
+            }
+            catch (Exception ex) when (ex is DirectoryNotFoundException || ex is FileNotFoundException)
             {
-                var records = csv.GetRecords<Lesson>().ToList();
-                return records;
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
             }
 
 
