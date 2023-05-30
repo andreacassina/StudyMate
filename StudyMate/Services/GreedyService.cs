@@ -57,9 +57,6 @@ namespace StudyMate.Services
                 Cfu = (int)Math.Ceiling((((c.Cfu * 25) - 100) * 1.1))       // ore da studiare nella settimana
             });
 
-            // Sottrazione ore già studiate --> Da aggiungere
-            
-
             List<StudySlot> studySlots = new List<StudySlot>();
 
             foreach (var course in courses)
@@ -101,7 +98,6 @@ namespace StudyMate.Services
                     sl.UserName = userName;
                     sl.UserId = userId;
                     studySlots.Add(sl);
-
                 }
 
             }

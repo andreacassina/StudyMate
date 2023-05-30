@@ -10,23 +10,17 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                Data
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDate)
+                Ora inizio
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                Ora fine
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Priority)
+                Corso
             </th>
-@*            <th>
-                @Html.DisplayNameFor(model => model.Course)
-            </th>*@
-@*            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -34,16 +28,16 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
+                @item.StartDate.Date.ToShortDateString()
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
+                @item.StartDate.TimeOfDay
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @item.EndDate.TimeOfDay
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Priority)
+                @item.Description
             </td>
         </tr>
 }

@@ -13,16 +13,16 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                Data
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDate)
+                Ora inizio
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                Ora fine
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Priority)
+                Descrizione
             </th>
 @*            <th>
                 @Html.DisplayNameFor(model => model.Course)
@@ -37,23 +37,17 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
+                @item.StartDate.Date.ToShortDateString()
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
+                @item.StartDate.TimeOfDay
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @item.EndDate.TimeOfDay
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Priority)
+                 @item.Description
             </td>
-@*            <td>
-                @Html.DisplayFor(modelItem => item.Course.CourseId)
-            </td>*@
-@*            <td>
-                @Html.DisplayFor(modelItem => item.User.UserId)
-            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
