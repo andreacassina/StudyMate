@@ -68,16 +68,29 @@ namespace StudyMate.Services
         {
             int freeHours = 24;
                                  //00 01  02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
-            int[] day = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1 };
+            int[] day = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0 };
             //Cerco le lezioni nella giornata selezionata
             var lessons = _context.Lessons.Where(l => l.Start.Date.Equals(date.Date)).Select(l => new {
                 start = l.Start.Hour,
                 end = l.End.Hour
             });
 
-            foreach(var lesson in lessons)
+            var personalEvents = _context.Events.Where(e => e.StartDate.Date.Equals(date.Date)).Select(e => new {
+                start = e.StartDate.Hour,
+                end = e.EndDate.Hour
+            });
+
+            
+
+            foreach (var lesson in lessons)
             {
                 for (int i = lesson.start; i <= lesson.end; i++)
+                    day[i] = 0;
+            }
+
+            foreach(var per in personalEvents)
+            {
+                for (int i = per.start; i <= per.end; i++)
                     day[i] = 0;
             }
 
