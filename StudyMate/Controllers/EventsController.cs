@@ -78,16 +78,26 @@ namespace StudyMate.Controllers
         // GET: EventsController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var ev = _context.Events.Find(id);
+            return View(ev);
         }
 
         // POST: EventsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Event ev)
         {
             try
             {
+                Event? oldEvent = _context.Events.Find(ev.Id);
+                if (oldEvent != null)
+                {
+                    oldEvent.StartDate = ev.StartDate;
+                    oldEvent.EndDate = ev.EndDate;
+                    oldEvent.Description = ev.Description;
+
+                    _context.SaveChanges();
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -99,16 +109,23 @@ namespace StudyMate.Controllers
         // GET: EventsController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var ev = _context.Events.Find(id);
+            return View(ev);
         }
 
         // POST: EventsController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Event ev)
         {
             try
             {
+                Event? e = _context.Events.Find(id);
+                if (e != null)
+                {
+                    _context.Events.Remove(e);
+                    _context.SaveChanges();
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -4,8 +4,31 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Calcola il tempo di studio</h1>
-     <input type="button" value="Calcola" onclick="location.href='@Url.Action("CalculateStudyTime", "Home")'" />
+     <input type="button" value="Calcola gli slot di studio" onclick="location.href='@Url.Action("CalculateStudyTime", "Home")'" />
 </div>
+
+<partial name="_Calendar" />
+
+@section Scripts{
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialDate: '2023-06-05',
+                initialView: 'timeGridWeek',
+              
+                events: '/api/calendar/events' // URL dell'API per recuperare gli eventi
+            });
+            calendar.render();
+        });
+
+        function CalculateStudyTime()
+        {
+
+        }
+    </script>
+}
 
 

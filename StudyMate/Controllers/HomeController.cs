@@ -27,13 +27,15 @@ namespace StudyMate.Controllers
             return View();
         }
 
+        //public async Task<IActionResult> CalculateStudyTime()
         public async Task<IActionResult> CalculateStudyTime()
         {
             ApplicationUser user = await _userManager.GetUserAsync(User);
 
 
             //DateTime date = new DateTime(2022, 10, 05);
-            DateTime date = new DateTime(2022, 10, 06);
+            //DateTime date = new DateTime(2022, 10, 06);
+            DateTime date = new DateTime(2023, 06, 05);
 
             if (user != null)
             {
@@ -74,7 +76,7 @@ namespace StudyMate.Controllers
             //if(_greedyService.CalculateGreedy(dailyHours, User.Identity.Name,))
 
             
-            return View();
+            return View("Index");
         }
 
         public IActionResult Privacy()

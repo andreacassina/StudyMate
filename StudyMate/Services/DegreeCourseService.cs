@@ -48,11 +48,20 @@ namespace StudyMate.Services
                 {
                     // Inserisco il corso nella tabella courses
                     _context.Courses.Add(course);
+
                     _context.SaveChanges();
                     //Ottengo le lezioni
                     DownloadLessonsByCourse(degreeCourse, course.CourseName, course.CourseId);
                     //_context.SaveChanges();
+                    //Inserisco gli esami nella tabella Deadlines
+                    Deadline deadline = new Deadline
+                    {
+                        ExamDate = course.ExamDate1,
+                        CourseId = course.CourseId,
+                    };
 
+                    _context.Deadlines.Add(deadline);
+                    _context.SaveChanges();
                 }
             }
             
