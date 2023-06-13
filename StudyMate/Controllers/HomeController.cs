@@ -4,6 +4,7 @@ using StudyMate.Services;
 using System.Diagnostics;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace StudyMate.Controllers
 {
@@ -22,6 +23,7 @@ namespace StudyMate.Controllers
             _userManager = userManager;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();
@@ -35,7 +37,7 @@ namespace StudyMate.Controllers
 
             //DateTime date = new DateTime(2022, 10, 05);
             //DateTime date = new DateTime(2022, 10, 06);
-            DateTime date = new DateTime(2023, 06, 05);
+            DateTime date = DateTime.Today;
 
             if (user != null)
             {
