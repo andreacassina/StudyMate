@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,6 +21,7 @@ namespace StudyMate.Controllers
             _userManager = userManager; 
         }
         // GET: EventsController
+        [Authorize]
         public ActionResult Index()
         {
             return View();
@@ -135,6 +137,7 @@ namespace StudyMate.Controllers
         }
 
         //Elenco di tutti gli eventiPersonali
+        [Authorize]
         public async Task<IActionResult> PersonalEvents()
         {
             ApplicationUser user = await _userManager.GetUserAsync(User);

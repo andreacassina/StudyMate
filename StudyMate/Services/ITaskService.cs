@@ -15,5 +15,6 @@ namespace StudyMate.Services
                                                                       // - tra le 12:00 e le 14:00 (cibo)
                                                                       // - tra le 19:00 e le 21:00 (cena)
         List<CalendarEventDTO> GetCalendarEvents(string userId);
+        List<CalendarEventDTO> GetTodayCalendarEvents(string userId);
     }
 }

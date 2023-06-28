@@ -166,14 +166,77 @@ namespace StudyMate.Services
 
 
 
-
-
-
             //var calendarEventsJSON = JsonSerializer.Serialize(calendarEvents);
             //return calendarEventsJSON;
+            calendarEvents.OrderBy(d => d.start);
             return calendarEvents;
 
             
+        }
+
+        List<CalendarEventDTO> ITaskService.GetTodayCalendarEvents(string userId)
+        {
+            List<CalendarEventDTO> calendarEvents = new List<CalendarEventDTO>();
+
+            //Ottengo il corso di laurea dell'utente loggato
+            string degreeCourse = _userManager.Users.Where(u => u.Id.Equals(userId)).Select(u => u.DegreeCourse).First();
+            // Ottengo l'elenco dei corsi del degreeCouse
+            var courses = _context.Courses.Where(c => c.DegreeCourse.Equals(degreeCourse)).Select(c => new { c.CourseId, c.CourseName });
+
+            foreach (var course in courses)
+            {
+                var lessons = _context.Lessons.Where(l => l.CourseId.Equals(course.CourseId) && l.Start.Date.Equals(DateTime.Today.Date)).Select(l => new CalendarEventDTO
+                {
+                    title = l.Description,
+                    start = l.Start,
+                    end = l.End,
+                    backgroundColor = "blue",
+                    borderColor = "darkblue",
+                    textColor = "white"
+
+                }).ToList();
+
+                //Inserisco le date degli esami
+                var deadlines = _context.Deadlines.Where(d => d.CourseId.Equals(course.CourseId) && d.ExamDate.Date.Equals(DateTime.Today.Date)).Select(d => new CalendarEventDTO
+                {
+                    title = course.CourseName,
+                    start = d.ExamDate,
+                    end = d.ExamDate.AddHours(4),
+                    backgroundColor = "red",
+                    borderColor = "black",
+                    textColor = "white"
+                }).ToList();
+
+                calendarEvents.AddRange(lessons);
+                calendarEvents.AddRange(deadlines);
+            }
+
+            var studySlots = _context.StudySlots.Where(s => s.UserId.Equals(userId) && s.From.Date.Equals(DateTime.Today.Date)).Select(s => new CalendarEventDTO
+            {
+                title = s.CourseName,
+                start = s.From,
+                end = s.To,
+                backgroundColor = "green",
+                borderColor = "darkgreen",
+                textColor = "white"
+            }).ToList();
+
+            calendarEvents.AddRange(studySlots);
+
+            //inserisco gli eventi personali
+            var personalEvents = _context.Events.Where(e => e.UserId.Equals(userId) && e.StartDate.Date.Equals(DateTime.Today.Date)).Select(e => new CalendarEventDTO
+            {
+                title = e.Description,
+                start = e.StartDate,
+                end = e.EndDate,
+                backgroundColor = "lightblue",
+                borderColor = "darkblue",
+                textColor = "white"
+            }).ToList();
+
+            calendarEvents.AddRange(personalEvents);
+            calendarEvents.OrderBy(c => c.start.Hour);
+            return calendarEvents;
         }
 
     }
