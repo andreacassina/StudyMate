@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudyMate.Models;
 using StudyMate.Services;
@@ -17,6 +18,7 @@ namespace StudyMate.Controllers
             _userManager = userManager;
         }
 
+        [Authorize]
         public IActionResult Index()
         {
             return View();
@@ -26,6 +28,13 @@ namespace StudyMate.Controllers
         public IActionResult GetEvents()
         {
             var eventsJSON = _taskService.GetCalendarEvents(_userManager.GetUserId(User));
+            return Json(eventsJSON);
+        }
+
+        [HttpGet("todayevents")]
+        public IActionResult GetTodayEvents()
+        {
+            var eventsJSON = _taskService.GetTodayCalendarEvents(_userManager.GetUserId(User));
             return Json(eventsJSON);
         }
     }
