@@ -11,4 +11,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Courses\Meccanica\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Courses\Meccanica\" />
+  </ItemGroup>
 </Project>

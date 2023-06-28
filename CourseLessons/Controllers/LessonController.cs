@@ -13,7 +13,7 @@ namespace CourseLessons.Controllers
         {
             try
             {   
-                string filePath = @"Courses\" + degreeCourse + @"\" + courseName + ".csv";
+                string filePath = @"Courses/" + degreeCourse + @"/" + courseName + ".csv";
                 using (var reader = new StreamReader(filePath))
                 using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
                 {

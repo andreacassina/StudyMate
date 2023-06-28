@@ -1,76 +1,71 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-     <input type="button" class="btn btn-primary" value="Calcola gli slot di studio" onclick="location.href='@Url.Action("CalculateStudyTime", "Home")'" />
+    <input type="button" class="btn btn-primary" value="Calcola gli slot di studio" onclick="location.href='@Url.Action("CalculateStudyTime", "Home")'" />
 </div>
 
 @*<partial  name="_Calendar" />*@
 @*<div id="calendar">
 
-</div>*@
+    </div>*@
 <br />
 <h2>Today events list:</h2>
 <div id="cardContainer"></div>
 
 @section Scripts{
 
-    <script>
-    $(document).ready(function() {
-        $.ajax({
-            url: "api/calendar/todayevents",
-            type: "GET",
-            dataType: "json",
-            success: function(data) {
-                // Iterate over the data and create Bootstrap cards
-                for (var i = 0; i < data.length; i++) {
-                    var cardData = data[i];
+    <script>$(document).ready(function () {
+            $.ajax({
+                url: "api/calendar/todayevents",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    // Iterate over the data and create Bootstrap cards
+                    for (var i = 0; i < data.length; i++) {
+                        var cardData = data[i];
 
-                    var start = cardData.start.split("T");
-                    var end = cardData.end.split("T");
+                        var start = cardData.start.split("T");
+                        var end = cardData.end.split("T");
 
-                    // Create the Bootstrap card element
-                    var card = $('<div class="card">');
-                    var cardHeader = $('<div class="card-header">').text(cardData.title);
-                    var cardBody = $('<div class="card-body">');
-                   // var cardTitle = $('<h5 class="card-header">').text(cardData.title);
-                    var cardStart = $('<p>').text('Start: ' + start[1]);
-                    var cardEnd = $('<p>').text('End: ' + end[1]);
-                     // Set card background color, border color, and text color
-                    card.css('background-color', cardData.backgroundColor);
-                    card.css('border-color', cardData.borderColor);
-                    card.css('color', cardData.textColor);
+                        // Create the Bootstrap card element
+                        var card = $('<div class="card">');
+                        var cardHeader = $('<div class="card-header">').text(cardData.title);
+                        var cardBody = $('<div class="card-body">');
+                        // var cardTitle = $('<h5 class="card-header">').text(cardData.title);
+                        var cardStart = $('<p>').text('Start: ' + start[1]);
+                        var cardEnd = $('<p>').text('End: ' + end[1]);
+                        // Set card background color, border color, and text color
+                        card.css('background-color', cardData.backgroundColor);
+                        card.css('border-color', cardData.borderColor);
+                        card.css('color', cardData.textColor);
 
-                    // Append the card components
-                    //cardBody.append(cardTitle, cardStart, cardEnd);
-                    cardBody.append(cardStart, cardEnd);
-                    card.append(cardHeader);
-                    card.append(cardBody);
+                        // Append the card components
+                        //cardBody.append(cardTitle, cardStart, cardEnd);
+                        cardBody.append(cardStart, cardEnd);
+                        card.append(cardHeader);
+                        card.append(cardBody);
 
-                    // Append the card to a container element on your page
-                    $('#cardContainer').append(card);
-                    $('#cardContainer').append("<br />");
+                        // Append the card to a container element on your page
+                        $('#cardContainer').append(card);
+                        $('#cardContainer').append("<br />");
 
+                    }
                 }
-            }
+            });
         });
-    });
-        //document.addEventListener('DOMContentLoaded', function() {
-        //    var calendarEl = document.getElementById('calendar');
-        //    var calendar = new FullCalendar.Calendar(calendarEl, {      
-        //        plugins: [ listPlugin ],
-        //        initialView: 'listWeek',
-        
-        //        events: '/api/calendar/events', // URL dell'API per recuperare gli eventi
-        //        height: 800,
-        //    contentHeight: 780,
-        //    aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
-        //    });
-        //    calendar.render();
-        //});
-    </script>
+            //document.addEventListener('DOMContentLoaded', function() {
+            //    var calendarEl = document.getElementById('calendar');
+            //    var calendar = new FullCalendar.Calendar(calendarEl, {
+            //        plugins: [ listPlugin ],
+            //        initialView: 'listWeek',
+
+            //        events: '/api/calendar/events', // URL dell'API per recuperare gli eventi
+            //        height: 800,
+            //    contentHeight: 780,
+            //    aspectRatio: 3,  // see: https://fullcalendar.io/docs/aspectRatio
+            //    });
+            //    calendar.render();
+            //});</script>
 }
-
-

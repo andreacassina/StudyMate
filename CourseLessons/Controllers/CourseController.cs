@@ -11,7 +11,7 @@ namespace CourseLessons.Controllers
         [HttpGet("GetCourses")]
         public ActionResult<IEnumerable<Course>> Get(string degreeCourse)
         {
-            string filePath = @"Courses\" + degreeCourse + @"\_List.csv";
+            string filePath = @"Courses/" + degreeCourse + @"/_List.csv";
 
             try
             {
