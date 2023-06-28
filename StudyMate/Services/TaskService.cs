@@ -235,8 +235,9 @@ namespace StudyMate.Services
             }).ToList();
 
             calendarEvents.AddRange(personalEvents);
-            calendarEvents.OrderBy(c => c.start.Hour);
-            return calendarEvents;
+
+            //calendarEvents.OrderBy(c => c.start.TimeOfDay).ToList();
+            return calendarEvents.OrderBy(c => c.start.TimeOfDay).ToList();
         }
 
     }
