@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using StudyMate.Models;
@@ -70,6 +71,8 @@ namespace StudyMate.Areas.Identity.Pages.Account
         /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
+        public List<SelectListItem> DegreeCoueses { get; set; }
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -106,6 +109,8 @@ namespace StudyMate.Areas.Identity.Pages.Account
 
             [Required]
             public string DegreeCourse { get; set; }        // codice del corso di studi
+
+            
         }
 
 
@@ -113,6 +118,8 @@ namespace StudyMate.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            var courses = _degreeService.GetDegreeCoursesName().Select(f => new SelectListItem { Value = f, Text = f }).ToList();
+            DegreeCoueses = courses;
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)

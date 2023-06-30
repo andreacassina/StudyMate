@@ -25,6 +25,18 @@ namespace StudyMate.Services
                 return true;
         }
 
+        public IEnumerable<string> GetDegreeCoursesName()
+        {
+            var apiUrl = $"https://localhost:7141/GetDegreeCourses";
+
+            var response = _httpClient.GetAsync(apiUrl).Result;
+
+            response.EnsureSuccessStatusCode();
+            var jsonString = response.Content.ReadAsStringAsync().Result;
+            var deserialized = JsonConvert.DeserializeObject<IEnumerable<string>>(jsonString);
+            return deserialized;
+        }
+
         //Ottengo l'elenco di tutti i corsi dato il corso di laurea -> l'elenco dei corsi viene preso dall'API CourseLesson
         public async void DownloadCourses(string degreeCourse)
         {
