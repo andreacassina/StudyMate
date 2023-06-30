@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using StudyMate.Models;
+using StudyMate.Services;
 
 namespace StudyMate.Controllers
 {
@@ -8,16 +9,20 @@ namespace StudyMate.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IDegreeCourseService _degreeService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IDegreeCourseService degreeService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _degreeService = degreeService;
         }   
 
         public IActionResult Register()
         {
+            //ViewBag["DegreeCourses"] = _degreeService.GetDegreeCoursesName();
             return View();
+            
         }
 
         [HttpPost]
