@@ -31,5 +31,34 @@ namespace CourseLessons.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpGet("GetDegreeCourses")]
+        public ActionResult<IEnumerable<string>> GetDegreeCourses()
+        {
+            string folderPath = @"Courses";
+            if (Directory.Exists(folderPath))
+            {
+                IEnumerable<string> folderNames = GetFolderNames(folderPath);
+
+                return Ok(folderNames);
+            }
+            else
+            {
+                Console.WriteLine("The specified folder does not exist.");
+                return NotFound();
+            }
+        }
+
+        private IEnumerable<string> GetFolderNames(string folderPath)
+        {
+            // Get all subdirectories within the given folder
+            string[] subdirectories = Directory.GetDirectories(folderPath);
+
+            // Extract and return the folder names
+            foreach (string subdirectory in subdirectories)
+            {
+                yield return new DirectoryInfo(subdirectory).Name.ToString();
+            }
+        }
     }
 }
